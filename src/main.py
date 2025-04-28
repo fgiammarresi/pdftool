@@ -25,16 +25,21 @@ def main():
 
     args = parser.parse_args()
 
-    if not os.path.exists(args.file):
-        print(f"Errore: il file {args.file} non esiste.")
+    # Gestione dei file con spazi
+    file_path = args.file
+    if " " in file_path:
+        file_path = f'"{file_path}"'
+
+    if not os.path.exists(file_path.strip('"')):
+        print(f"Errore: il file {file_path} non esiste.")
         return
 
     if args.action == "transcribe":
-        trascrizione(args.file)
+        trascrizione(file_path)
     elif args.action == "translate":
-        traduzione(args.file)
+        traduzione(file_path)
     elif args.action == "summarize":
-        sintesi(args.file)
+        sintesi(file_path)
     else:
         print(f"Azione non valida: {args.action}")
 
