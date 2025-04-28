@@ -1,4 +1,5 @@
 # PDFTool
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/fgiammarresi/pdftool/blob/main/pdftool_colab.ipynb)
 
 PDFTool è uno strumento semplice ma potente per estrarre testo e tabelle da file PDF, con possibilità di salvataggio in formato DOCX.
 (Future version: traduzione testi, sintesi automatica, output in XLSX e PPTX.)
