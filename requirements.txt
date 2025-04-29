@@ -1,3 +1,5 @@
 PyMuPDF
 python-docx
 tqdm
+openpyxl
+python-pptx
