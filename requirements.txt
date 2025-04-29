@@ -3,3 +3,6 @@ python-docx
 tqdm
 openpyxl
 python-pptx
+deep-translator
+transformers
+torch
