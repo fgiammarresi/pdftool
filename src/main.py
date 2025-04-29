@@ -12,20 +12,20 @@ from pptx import Presentation
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def trascrizione(file_path, output_format="txt"):
-    print(f"[TRASCRIZIONE] Elaboro il file: {file_path}")
+    logging.info(f"[TRASCRIZIONE] Elaboro il file: {file_path}")
     doc = fitz.open(file_path)
     pages_text = [page.get_text() for page in doc]
     doc.close()
 
     output_format = output_format.lower()
+    base_name = os.path.splitext(os.path.basename(file_path))[0].replace(" ", "_")
+    output_path = f"{base_name}_trascrizione.{output_format}"
 
     if output_format == "txt":
-        output_path = "trascrizione.txt"
         with open(output_path, "w", encoding="utf-8") as f:
             f.write("\n\n".join(pages_text))
 
     elif output_format == "docx":
-        output_path = "trascrizione.docx"
         document = Document()
         for text in pages_text:
             document.add_paragraph(text)
@@ -33,7 +33,6 @@ def trascrizione(file_path, output_format="txt"):
         document.save(output_path)
 
     elif output_format == "xlsx":
-        output_path = "trascrizione.xlsx"
         wb = Workbook()
         ws = wb.active
         ws.title = "PDF Testo"
@@ -42,7 +41,6 @@ def trascrizione(file_path, output_format="txt"):
         wb.save(output_path)
 
     elif output_format == "pptx":
-        output_path = "trascrizione.pptx"
         prs = Presentation()
         blank_slide_layout = prs.slide_layouts[1]  # titolo + contenuto
         for i, text in enumerate(pages_text, start=1):
@@ -52,19 +50,20 @@ def trascrizione(file_path, output_format="txt"):
         prs.save(output_path)
 
     else:
-        print(f"❌ Formato di output non supportato: {output_format}")
+        logging.error(f"❌ Formato di output non supportato: {output_format}")
         return
 
-    print(f"✅ Trascrizione completata. File salvato come: {output_path}")
+    logging.info(f"✅ Trascrizione completata. File salvato come: {output_path}")
+    print(output_path)  # utile per Colab per trovare il file
 
 def traduzione(file_path):
     logging.info(f"[TRADUZIONE] Elaboro il file: {file_path}")
-    # Qui andrà il codice per la traduzione
+    # Da implementare
     pass
 
 def sintesi(file_path):
     logging.info(f"[SINTESI] Elaboro il file: {file_path}")
-    # Qui andrà il codice per la sintesi
+    # Da implementare
     pass
 
 def parse_args():
@@ -75,22 +74,15 @@ def parse_args():
     return parser.parse_args()
 
 def main():
-    # Analizza gli argomenti
     args = parse_args()
+    file_path = args.file.strip('"')
 
-    # Gestione dei file con spazi (aggiungi virgolette per evitare problemi di separazione degli argomenti)
-    file_path = args.file
-    if " " in file_path:
-        file_path = f'"{file_path}"'
-
-    # Verifica se il file esiste
-    if not os.path.exists(file_path.strip('"')):
+    if not os.path.exists(file_path):
         logging.error(f"Errore: il file {file_path} non esiste.")
         return
 
-    # Esegui l'azione richiesta
     if args.action == "transcribe":
-        trascrizione(args.file, args.output)
+        trascrizione(file_path, args.output)
     elif args.action == "translate":
         traduzione(file_path)
     elif args.action == "summarize":
